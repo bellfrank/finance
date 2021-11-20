@@ -96,9 +96,12 @@ def index():
     for stock in stocks:
         symbol = stock["symbol"]
         data = lookup(symbol)
+        print("symbol:\n", symbol)
+        print("data:\n", data)
 
         # Price for one share
         price = data['price']
+        print("price:\n", price)
         stock["price"] = price  # update current price
 
         # Stock Total
