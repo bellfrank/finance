@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, lookup, usd
 
 # Configure application
-app = Flask(__name__)
+#app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
