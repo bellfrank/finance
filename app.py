@@ -35,7 +35,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///finance.db")
+#db = SQL("sqlite:///finance.db")
+db = SQL(os.getenv("DATABASE_URL"))
 
 # Make sure API key is set
 if not os.environ.get("API_KEY"):
@@ -124,19 +125,25 @@ def buy():
 
         # Ensure symbol was submitted
         if not request.form.get("symbol"):
-            return apology("must provide symbol", 400)
+            return apology("missing symbol", 400)
         if not request.form.get("shares"):
-            return apology("must fill out # of shares", 400)
+            return apology("missing shares", 400)
 
         symbol = lookup(request.form.get("symbol"))
 
         try:
             shares = int(request.form.get("shares"))
         except ValueError:
-            return apology("shares must be a positive integer", 400)
+            return apology("shares must be an integer", 400)
+
+        if shares < 0:
+            return apology("shares must be a positive")
+
+        if isinstance(shares,float):
+            return apology("shares must be int, not floats")
 
         if symbol is None:
-            return apology("must provide valid symbol", 400)
+            return apology("not a valid symbol", 400)
         else:
             id_user = session["user_id"]
 
