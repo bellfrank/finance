@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required, lookup, usd
 
 # Configure application
-#app = Flask(__name__)
+app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -34,8 +34,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
+db = SQL("sqlite:///finance.db")
 #db = SQL(os.getenv("DATABASE_URL"))
-db = SQL(os.getenv("DATABASE_URL"))
 
 # Make sure API key is set
 if not os.environ.get("API_KEY"):
