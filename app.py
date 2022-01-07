@@ -52,7 +52,7 @@ if not os.environ.get("API_KEY"):
 def update():
     id_user = session["user_id"]
 
-    stocks = db.execute("SELECT symbol,name,price,total, SUM(shares) FROM symbol WHERE user_id=? GROUP BY symbol,name;", id_user)
+    stocks = db.execute("SELECT symbol,name,price,total, SUM(shares) FROM symbol WHERE user_id=? GROUP BY symbol AND name;", id_user)
     balances = db.execute("SELECT cash FROM users WHERE id=? ;", id_user)
 
     # User account balance
