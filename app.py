@@ -30,9 +30,9 @@ app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
-app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_PERMANENT"] = False # when close browser, cookies go away
 app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+Session(app) # we tell our app to support sessions
 
 uri = os.getenv("DATABASE_URL")  # or other relevant config var
 if uri.startswith("postgres://"):
@@ -52,7 +52,7 @@ if not os.environ.get("API_KEY"):
 def update():
     id_user = session["user_id"]
 
-    stocks = db.execute("SELECT symbol,name,price,total, SUM(shares) FROM symbol WHERE user_id=? GROUP BY name;", id_user)
+    stocks = db.execute("SELECT symbol,name,price,total, SUM(shares) FROM symbol WHERE user_id=? GROUP BY symbol,name;", id_user)
     balances = db.execute("SELECT cash FROM users WHERE id=? ;", id_user)
 
     # User account balance
