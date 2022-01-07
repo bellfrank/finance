@@ -108,7 +108,7 @@ def index():
         stock["price"] = price  # update current price
 
         # Stock Total
-        total_shares = stock["SUM(shares)"]
+        total_shares = stock["shares"]
         cost = price*total_shares
         stock["total"] = cost  # update total price
         total_stock = cost + total_stock
