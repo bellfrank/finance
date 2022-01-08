@@ -92,7 +92,7 @@ def index():
 
     # User account balance
     
-    cash = stocks["cash"]
+    cash = int(stocks["cash"])
     # Removing stocks from index if total net is 0
 
     # Updating prices on stocks
