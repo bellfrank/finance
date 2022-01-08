@@ -291,7 +291,10 @@ def register():
 def sell():
     """Sell shares of stock"""
     id_user = session["user_id"]
-    stocks = db.execute("SELECT symbol,SUM(shares) FROM symbol WHERE user_id=? GROUP BY name;", id_user)
+    stocks = db.execute(" SELECT * FROM symbol JOIN users ON symbol.user_id = users.id WHERE user_id=?", id_user)
+    sum_shares = 0
+    for stock in stocks:
+        sum_shares = sum_shares + stock['shares']
 
     if request.method == "POST":
 
@@ -337,7 +340,7 @@ def sell():
 
         return redirect("/")
     else:
-        return render_template("sell.html", stocks=stocks )
+        return render_template("sell.html", stocks=stocks, sum_shares=sum_shares)
 
 @app.route("/account", methods=["GET", "POST"])
 @login_required
