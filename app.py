@@ -97,6 +97,7 @@ def index():
 
     # Updating prices on stocks
     total_stock = 0.00
+    total_shares = 0
     for stock in stocks:
         symbol = stock["symbol"]
         data = lookup(symbol)
