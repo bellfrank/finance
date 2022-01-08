@@ -91,8 +91,8 @@ def index():
     stocks = db.execute("SELECT * FROM symbol JOIN users ON symbol.user_id = users.id WHERE user_id=?", id_user)
 
     # User account balance
-    
-    cash = int(stocks["cash"])
+    for stock in stocks:
+        cash = stock["cash"]
     # Removing stocks from index if total net is 0
 
     # Updating prices on stocks
