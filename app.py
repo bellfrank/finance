@@ -88,14 +88,12 @@ def index():
     """Show portfolio of stocks"""
     id_user = session["user_id"]
     # test
-    stocks = db.execute("SELECT * FROM symbol WHERE user_id=?", id_user)
-    balances = db.execute("SELECT cash FROM users WHERE id=? ;", id_user)
+    stocks = db.execute("SELECT * FROM symbol JOIN users ON symbol.user_id = users.id WHERE user_id=?", id_user)
 
     # User account balance
-    for balance in balances:
-        cash = balance["cash"]
+    
+    cash = stocks["cash"]
     # Removing stocks from index if total net is 0
-
 
     # Updating prices on stocks
     total_stock = 0.00
@@ -108,7 +106,7 @@ def index():
         stock["price"] = price  # update current price
 
         # Stock Total
-        total_shares = stock["shares"] # needs fixing
+        total_shares = total_shares + stock["shares"] # needs fixing
         cost = price*total_shares
         stock["total"] = cost  # update total price
         total_stock = cost + total_stock
@@ -116,7 +114,7 @@ def index():
     # Total sum of new prices of stocks + balance in account
     total_balance = cash + total_stock
 
-    return render_template("index.html", stocks=stocks, cash=cash, total_balance=total_balance)
+    return render_template("index.html", stocks=stocks, cash=cash, total_balance=total_balance, total_shares=total_shares)
 
 
 @app.route("/buy", methods=["GET", "POST"])
