@@ -292,9 +292,6 @@ def sell():
     """Sell shares of stock"""
     id_user = session["user_id"]
     stocks = db.execute(" SELECT * FROM symbol JOIN users ON symbol.user_id = users.id WHERE user_id=?", id_user)
-    sum_shares = 0
-    for stock in stocks:
-        sum_shares = sum_shares + stock['shares']
 
     if request.method == "POST":
 
@@ -312,9 +309,9 @@ def sell():
             return apology("Insert # of shares you'd like to sell")
 
 
-        check_stocks = db.execute("SELECT SUM(shares) FROM symbol WHERE user_id=? AND symbol=? ;", id_user, symbol)
+        check_stocks = db.execute("SELECT SUM(shares) AS shares FROM symbol WHERE user_id=? AND symbol=? ;", id_user, symbol)
         for check_stock in check_stocks:
-            sum_shares = check_stock["SUM(shares)"]
+            sum_shares = check_stock["shares"]
 
 
         if selling_shares > sum_shares:
