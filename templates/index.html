@@ -23,7 +23,7 @@
         <tbody>
             <!--Loops through the database entries to display them in a table -->
             {% for stock in stocks %}
-                {% if total_shares != 0 %}
+                {% if stock["SUM(shares)"] != 0 %}
                 <tr>
                     <td>{{ stock.symbol }}</td>
                     <td>{{ stock.name }}</td>

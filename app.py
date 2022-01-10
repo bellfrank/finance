@@ -89,11 +89,14 @@ def index():
     id_user = session["user_id"]
     
     # Retrieving stocks from user
-    stocks = db.execute("SELECT symbol, total, price ,SUM(shares) AS shares FROM symbol WHERE user_id=?", id_user)
+    stocks = db.execute("SELECT *,SUM(shares) FROM symbol WHERE user_id=?", id_user)
+    dcash = db.execute("SELECT cash FROM users WHERE id=?", id_user)
+    cash = dcash["cash"]
 
     # Updating prices on stocks
     total_stock = 0.00
     total_shares = 0
+
     for stock in stocks:
         symbol = stock["symbol"]
         data = lookup(symbol)
@@ -111,7 +114,7 @@ def index():
     # Total sum of new prices of stocks + balance in account
     total_balance = cash + total_stock
 
-    return render_template("index.html", stocks=stocks, cash=cash, total_balance=total_balance, total_shares=total_shares)
+    return render_template("index.html", stocks=stocks, cash=cash, total_balance=total_balance)
 
 
 @app.route("/buy", methods=["GET", "POST"])
