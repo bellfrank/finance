@@ -87,13 +87,9 @@ def update():
 def index():
     """Show portfolio of stocks"""
     id_user = session["user_id"]
-    # test
-    stocks = db.execute("SELECT * FROM symbol JOIN users ON symbol.user_id = users.id WHERE user_id=?", id_user)
-
-    # User account balance
-    for stock in stocks:
-        cash = stock["cash"]
-    # Removing stocks from index if total net is 0
+    
+    # Retrieving stocks from user
+    stocks = db.execute("SELECT symbol, total, price ,SUM(shares) AS shares FROM symbol WHERE user_id=?", id_user)
 
     # Updating prices on stocks
     total_stock = 0.00
@@ -103,11 +99,11 @@ def index():
         data = lookup(symbol)
 
         # Price for one share
-        price = data['price']
+        price = data["price"]
         stock["price"] = price  # update current price
 
         # Stock Total
-        total_shares = total_shares + stock["shares"] # needs fixing
+        total_shares = stock["shares"] # needs fixing
         cost = price*total_shares
         stock["total"] = cost  # update total price
         total_stock = cost + total_stock
@@ -291,7 +287,7 @@ def register():
 def sell():
     """Sell shares of stock"""
     id_user = session["user_id"]
-    stocks = db.execute(" SELECT * FROM symbol JOIN users ON symbol.user_id = users.id WHERE user_id=?", id_user)
+    stocks = db.execute("SELECT * FROM symbol JOIN users ON symbol.user_id = users.id WHERE user_id=?", id_user)
 
     if request.method == "POST":
 
