@@ -11,7 +11,7 @@
             <select class="form-control" name="symbol" autofocus onchange="loadDoc(this.value)">
                 <option disabled selected value="">Symbol</option>
                 {% for stock in stocks %}
-                    {% if sum_shares != 0 %}
+                    {% if stock['shares'] != 0 %}
                     <option value="{{ stock.symbol }}">{{ stock.symbol }}</option>
                     {% endif %}
                 {% endfor %}

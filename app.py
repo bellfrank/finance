@@ -34,14 +34,14 @@ app.config["SESSION_PERMANENT"] = False # when close browser, cookies go away
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app) # we tell our app to support sessions
 
-uri = os.getenv("DATABASE_URL")  # or other relevant config var
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://", 1)
+#uri = os.getenv("DATABASE_URL")  # or other relevant config var
+#if uri.startswith("postgres://"):
+    #uri = uri.replace("postgres://", "postgresql://", 1)
 # rest of connection code using the connection string `uri`
 
 # Configure CS50 Library to use SQLite database
-#db = SQL("sqlite:///finance.db")
-db = SQL(uri)
+db = SQL("sqlite:///finance.db")
+#db = SQL(uri)
 
 # Make sure API key is set
 if not os.environ.get("API_KEY"):
@@ -299,30 +299,22 @@ def register():
 def sell():
     """Sell shares of stock"""
     id_user = session["user_id"]
-    stocks = db.execute("SELECT * FROM symbol JOIN users ON symbol.user_id = users.id WHERE user_id=?", id_user)
+    stocks = db.execute("SELECT symbol,name,SUM(shares) AS shares FROM symbol WHERE user_id=? GROUP BY symbol,name;", id_user)
 
     if request.method == "POST":
-
         # inserting symbol
         symbol = request.form.get("symbol")
-
         # checks to see if user left symbol blank
         if not symbol:
             return apology("Must fill out symbol field", 400)
-
         # gets users amount they want to sell and handles checking cases
         selling_shares = int(request.form.get("shares"))
-
         if not selling_shares:
             return apology("Insert # of shares you'd like to sell")
 
-
-        check_stocks = db.execute("SELECT SUM(shares) AS shares FROM symbol WHERE user_id=? AND symbol=? ;", id_user, symbol)
-        for check_stock in check_stocks:
-            sum_shares = check_stock["shares"]
-
-
-        if selling_shares > sum_shares:
+        sum_shares = db.execute("SELECT symbol,name,SUM(shares) AS shares FROM symbol WHERE user_id=? AND symbol=? GROUP BY symbol,name;", id_user,symbol)
+        
+        if selling_shares > sum_shares[0]["shares"]:
             return apology("You don't own that many shares")
 
         data = lookup(symbol)
@@ -345,7 +337,7 @@ def sell():
 
         return redirect("/")
     else:
-        return render_template("sell.html", stocks=stocks, sum_shares=sum_shares)
+        return render_template("sell.html", stocks=stocks)
 
 @app.route("/account", methods=["GET", "POST"])
 @login_required
