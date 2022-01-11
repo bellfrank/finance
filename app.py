@@ -34,14 +34,14 @@ app.config["SESSION_PERMANENT"] = False # when close browser, cookies go away
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app) # we tell our app to support sessions
 
-uri = os.getenv("DATABASE_URL")  # or other relevant config var
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://", 1)
+#uri = os.getenv("DATABASE_URL")  # or other relevant config var
+#if uri.startswith("postgres://"):
+    #uri = uri.replace("postgres://", "postgresql://", 1)
 # rest of connection code using the connection string `uri`
 
 # Configure CS50 Library to use SQLite database
-#db = SQL("sqlite:///finance.db")
-db = SQL(uri)
+db = SQL("sqlite:///finance.db")
+#db = SQL(uri)
 
 # Make sure API key is set
 if not os.environ.get("API_KEY"):
@@ -58,8 +58,6 @@ def update():
     # User account balance
     for balance in balances:
         cash = balance["cash"]
-    # Removing stocks from index if total net is 0
-
 
     # Updating prices on stocks
     total_stock = 0.00
@@ -89,13 +87,15 @@ def index():
     id_user = session["user_id"]
     
     # Retrieving stocks from user
-    stocks = db.execute("SELECT *,SUM(shares) FROM symbol WHERE user_id=?", id_user)
+    stocks = db.execute("SELECT symbol,name,SUM(shares) AS shares FROM symbol WHERE user_id=? GROUP BY symbol,name;", id_user)
+    
     dcash = db.execute("SELECT cash FROM users WHERE id=?", id_user)
-    cash = dcash["cash"]
+    cash = dcash[0]
 
-    # Updating prices on stocks
+    dict_stock = {'symbol':'', 'name':'', 'shares':0, 'price':0.00, 'total':0.00}
+    l_stock = []
+
     total_stock = 0.00
-    total_shares = 0
 
     for stock in stocks:
         symbol = stock["symbol"]
@@ -103,18 +103,27 @@ def index():
 
         # Price for one share
         price = data["price"]
-        stock["price"] = price  # update current price
+        dict_stock["price"] = price  # update current price
 
         # Stock Total
-        total_shares = stock["shares"] # needs fixing
-        cost = price*total_shares
-        stock["total"] = cost  # update total price
+        sumtotal = stock['shares']
+        cost = price*(sumtotal)
+        dict_stock["total"] = cost  # update total price
+        
+        # Keeping a tally sum of all stocks
         total_stock = cost + total_stock
+        
+        dict_stock['symbol'] = stock['symbol']
+        dict_stock['name'] = stock['name']
+        dict_stock['shares'] = stock['shares']
+        
+        dict_copy = dict_stock.copy()
+        l_stock.append(dict_copy)
 
     # Total sum of new prices of stocks + balance in account
-    total_balance = cash + total_stock
+    total_balance = cash['cash'] + total_stock
 
-    return render_template("index.html", stocks=stocks, cash=cash, total_balance=total_balance)
+    return render_template("index.html", l_stock=l_stock, cash=cash, total_balance=total_balance)
 
 
 @app.route("/buy", methods=["GET", "POST"])

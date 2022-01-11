@@ -17,25 +17,25 @@
             </tr>
         </thead>
         <tfoot>
-            <td colspan="4"></td>
+            <td colspan="4"> Total Balance</td>
             <td>{{total_balance | usd}}</td>
         </tfoot>
         <tbody>
             <!--Loops through the database entries to display them in a table -->
-            {% for stock in stocks %}
-                {% if stock["SUM(shares)"] != 0 %}
+            {% for i in range(l_stock|length) %}
+                {% if l_stock[i]["shares"] != 0 %}
                 <tr>
-                    <td>{{ stock.symbol }}</td>
-                    <td>{{ stock.name }}</td>
-                    <td>{{ stock.shares }}</td>
-                    <td>{{ stock.price | usd}}</td>
-                    <td>{{ stock.total | usd}}</td>
+                    <td>{{ l_stock[i]["symbol"] }}</td>
+                    <td>{{ l_stock[i]["name"] }}</td>
+                    <td>{{ l_stock[i]["shares"] }}</td>
+                    <td>{{ l_stock[i]["price"] | usd }}</td>
+                    <td>{{ l_stock[i]["total"] | usd }}</td>
                 </tr>
                 {% endif %}
             {% endfor %}
                 <tr>
                     <td colspan="4">CASH (Available Funds)</td>
-                    <td> {{  cash | usd }} </td>
+                    <td> {{ cash['cash'] | usd }} </td>
                 </tr>
         </tbody>
     </table>
