@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block main %}
+    <p>Enter quote Symbol. Ex: Apple = AAPL and TESLA = TSLA</p>
+    <p>Not sure? Search for Symbol here</p>
     <form action="/quote" method="post">
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="symbol" placeholder="Symbol" type="text" required>

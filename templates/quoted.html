@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    A share of {{symbol.name}} ({{symbol.symbol}}) costs {{symbol.price | usd}}
+    <h5>A share of {{symbol.name}} ({{symbol.symbol}}) costs {{symbol.price | usd}}</h5>
     <p></p>
     <form action="/buy" method="post">
         <div class="form-group">
