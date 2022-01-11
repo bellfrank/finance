@@ -9,10 +9,10 @@
     <p></p>
     <form action="/buy" method="post">
         <div class="form-group">
-            <input autocomplete="on" autofocus class="form-control" name="symbol" placeholder={{symbol.symbol}} type="text">
+            <input autocomplete="off" class="form-control" name="symbol" value={{symbol.symbol}} type="text" required>
         </div>
         <div class="form-group">
-            <input autocomplete="off" class="form-control" name="shares" placeholder="Shares" type="number" min="1" required>
+            <input autocomplete="off" autofocus class="form-control" name="shares" placeholder="Shares" type="number" min="1" required>
         </div>
         <button class="btn btn-primary" type="submit">Buy</button>
     </form>

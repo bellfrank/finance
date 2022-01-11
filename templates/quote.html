@@ -11,4 +11,26 @@
         </div>
         <button class="btn btn-primary" type="submit">Quote</button>
     </form>
+    <!-- <body>
+        <input autocomplete="off" autofocus placeholder="Query" type="text">
+
+        <ul></ul>
+
+        <script>
+    
+            let input = document.querySelector('input');
+            input.addEventListener('input', async function() {
+                let response = await fetch('/search?q=' + input.value);
+                let shows = await response.json(); // parses turns into list of dict
+                let html = '';
+                for (let id in shows) {
+                    let title = shows[id].title.replace('<', '&lt;').replace('&', '&amp;');
+                    html += '<li>' + title + '</li>';
+                }
+                document.querySelector('ul').innerHTML = html;
+            });
+
+        </script>
+
+    </body> -->
 {% endblock %}
