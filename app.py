@@ -338,7 +338,7 @@ def sell():
         return redirect("/")
     else:
         return render_template("sell.html", stocks=stocks)
-
+#fixed
 @app.route("/account", methods=["GET", "POST"])
 @login_required
 def changepswd():
