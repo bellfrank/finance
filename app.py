@@ -2,7 +2,7 @@ import os
 import re
 
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -249,6 +249,21 @@ def quote():
     else:
         return render_template("quote.html")
 
+
+@app.route("/searchquote")
+def index2():
+    return render_template("index2.html")
+
+@app.route("/search")
+def search():
+    q = request.args.get("q")
+    if q:
+        #shows = db.execute("SELECT DISTINCT name FROM symbol WHERE name LIKE ? LIMIT 50", "%" + q + "%")
+        shows = lookup(q)
+        print(shows)
+    else:
+        shows = []
+    return jsonify(shows)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
