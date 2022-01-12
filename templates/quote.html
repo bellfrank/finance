@@ -5,34 +5,13 @@
 {% endblock %}
 
 {% block main %}
-    <p>Enter quote Symbol. Ex: Apple = AAPL and TESLA = TSLA</p>
-    <p>Not sure? Search for Symbol here</p>
+    <h5>Enter quote Symbol. </h5>
+    <p>Ex: Apple = AAPL</p>
     <form action="/quote" method="post">
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="symbol" placeholder="Symbol" type="text" required>
         </div>
         <button class="btn btn-primary" type="submit">Quote</button>
     </form>
-    <!-- <body>
-        <input autocomplete="off" autofocus placeholder="Query" type="text">
-
-        <ul></ul>
-
-        <script>
     
-            let input = document.querySelector('input');
-            input.addEventListener('input', async function() {
-                let response = await fetch('/search?q=' + input.value);
-                let shows = await response.json(); // parses turns into list of dict
-                let html = '';
-                for (let id in shows) {
-                    let title = shows[id].title.replace('<', '&lt;').replace('&', '&amp;');
-                    html += '<li>' + title + '</li>';
-                }
-                document.querySelector('ul').innerHTML = html;
-            });
-
-        </script>
-
-    </body> -->
 {% endblock %}
