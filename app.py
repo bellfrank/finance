@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, lookup, usd, lookups
 
 # updated January 19, 2022
 # Configure application
@@ -163,7 +163,7 @@ def buy():
                 balance = balance - cost
                 db.execute("UPDATE users SET cash=? WHERE id=?", balance, id_user)
                 db.execute("INSERT INTO symbol(user_id, symbol, name, shares, price, total) VALUES(?,?,?,?,?,?)", id_user, symbol, name, shares, price, cost)
-
+                flash("Bought Successfully!")
                 return redirect("/")
             else:
                 return apology("Not enough funds :( ", 400)
@@ -227,6 +227,7 @@ def logout():
     session.clear()
 
     # Redirect user to login form
+    flash("Logged Out Successfully!")
     return redirect("/")
 
 
@@ -260,7 +261,7 @@ def search():
     q = request.args.get("q")
     if q:
         #shows = db.execute("SELECT DISTINCT name FROM symbol WHERE name LIKE ? LIMIT 50", "%" + q + "%")
-        shows = lookup(q)
+        shows = lookups(q)
         print(shows)
     else:
         shows = []
@@ -303,6 +304,8 @@ def register():
         password = generate_password_hash(password)
 
         db.execute("INSERT INTO users(username, hash) VALUES (?, ?)", username, password)
+        
+        flash("Registered Successfully!")
 
         return render_template("login.html")
 
@@ -350,6 +353,7 @@ def sell():
         balance = balance + selling_total
         db.execute("UPDATE users SET cash=? WHERE id=?", balance, id_user)
         db.execute("INSERT INTO symbol(user_id, symbol, name, shares, price, total) VALUES(?,?,?,?,?,?)", id_user, symbol, name, -selling_shares, share_price, -selling_total)
+        flash("Sold Successfully!")
 
         return redirect("/")
     else:
@@ -373,6 +377,7 @@ def changepswd():
         password = generate_password_hash(password)
 
         db.execute("UPDATE users SET hash =? WHERE id=?", password, id_user)
+        flash("Password Successfully Changed!")
         return redirect("/")
 
     else:
@@ -394,6 +399,8 @@ def addcash():
 
 
         db.execute("UPDATE users SET cash=? WHERE id=?", balance, id_user)
+
+        flash("Cash Added Successfully!")
 
         return redirect("/")
 

@@ -59,6 +59,28 @@ def lookup(symbol):
     except (KeyError, TypeError, ValueError):
         return None
 
+def lookups(symbol):
+    """Look up quote for symbol."""
+
+    # Contact API
+    try:
+        api_key = os.environ.get("API_KEY")
+        #url = f"https://cloud-sse.iexapis.com/stable/cryptoQuotes/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}"
+        url = f"https://cloud.iexapis.com/stable/stock/{urllib.parse.quote_plus(symbol)}/quote?token={api_key}"
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.RequestException:
+        return None
+
+    # Parse response
+    try:
+        quote = response.json()
+        return {
+            "name": quote["companyName"],
+            "symbol": quote["symbol"]
+        }
+    except (KeyError, TypeError, ValueError):
+        return None
 
 def usd(value):
     """Format value as USD."""
